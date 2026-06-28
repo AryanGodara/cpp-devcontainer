@@ -1,15 +1,31 @@
 {
   "name": "C++ (Debian 12)",
   "build": { "dockerfile": "Dockerfile" },
+  "features": {
+    "ghcr.io/devcontainers/features/common-utils:2": {
+      "installZsh": true,
+      "configureZshAsDefaultShell": true,
+      "installOhMyZsh": true,
+      "upgradePackages": false,
+      "username": "vscode"
+    },
+    "ghcr.io/devcontainers/features/github-cli:1": {},
+    "ghcr.io/devcontainers/features/node:1": { "version": "lts" }
+  },
   "customizations": {
     "vscode": {
       "extensions": [
         "llvm-vs-code-extensions.vscode-clangd",
         "vadimcn.vscode-lldb",
-        "ms-vscode.cmake-tools"
+        "ms-vscode.cmake-tools",
+        "anthropic.claude-code"
       ]
     }
   },
-  "postCreateCommand": "g++ --version && clangd --version && cmake --version && ninja --version && lldb --version",
+  "mounts": [
+    "source=${localEnv:HOME}/Developer,target=/home/vscode/Developer,type=bind,consistency=cached",
+    "source=claude-code-config-${devcontainerId},target=/home/vscode/.claude,type=volume"
+  ],
+  "postCreateCommand": "bash .devcontainer/post-create.sh",
   "remoteUser": "vscode"
 }
